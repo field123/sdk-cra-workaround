@@ -1,7 +1,20 @@
 import logo from './logo.svg';
 import './App.css';
+import {gateway} from '@moltin/sdk'
+import { useEffect, useState } from 'react';
+
+const EPCC = gateway({
+  client_id: 'KkAszgYPkfqZ7ZTLIcPJOSO4n9fxEJB8P6uCJIfg2B',
+  host: 'epcc-integration.global.ssl.fastly.net',
+})
 
 function App() {
+  const [products, setProducts] = useState([]);
+ 
+  useEffect(() => {
+    EPCC.ShopperCatalog.Products.All().then((resp) => setProducts(resp.data));
+  }, [])
+
   return (
     <div className="App">
       <header className="App-header">
@@ -17,6 +30,11 @@ function App() {
         >
           Learn React
         </a>
+        <ul>
+        {products?.map((product, index) => (
+          <li key={index}>{product.attributes.name}</li>
+        ))}
+      </ul>
       </header>
     </div>
   );
